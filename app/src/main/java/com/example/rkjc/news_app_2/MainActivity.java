@@ -1,7 +1,12 @@
 package com.example.rkjc.news_app_2;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,9 +28,10 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
 
-    private TextView textView;
-
-    private static String searchResults = "Loading ...";
+    private static String searchResults = "";
+    private RecyclerView newsRecyclerView;
+    private NewsAdapter newsAdapter;
+    private ArrayList<NewsItem> newsList = new ArrayList<NewsItem>();
 
     @Override
     protected void onStart() {
@@ -36,9 +42,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textView = (TextView) findViewById(R.id.textview);
-        textView.setText(searchResults);
-        new NewsQueryTask().execute();
+        newsRecyclerView = (RecyclerView) findViewById(R.id.news_recyclerview);
+        newsAdapter = new NewsAdapter(this, newsList);
+        newsRecyclerView.setAdapter(newsAdapter);
+        newsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        new NewsQueryTask().execute();
+    }
+
+    public void populateRecyclerView(String searchResults) {
+        Log.d("mycode", searchResults);
+        newsList = JsonUtils.parseNews(searchResults);
+        newsAdapter.allNews = newsList;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                newsAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     class NewsQueryTask extends AsyncTask<Void, Void, Void> {
@@ -48,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 searchResults = NetworkUtils.getResponseFromHttpUrl(NetworkUtils.buildURL());
+                populateRecyclerView(searchResults);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -59,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            textView.setText(searchResults);
         }
     }
 
@@ -67,8 +87,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
 
-        if (itemThatWasClickedId == R.id.get_news) {
-            textView.setText("Loading ...");
+        if (itemThatWasClickedId == R.id.action_search) {
             new NewsQueryTask().execute();
             return true;
         }
