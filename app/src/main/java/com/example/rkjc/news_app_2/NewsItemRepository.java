@@ -42,7 +42,9 @@ public class NewsItemRepository {
 
                 String searchResults = NetworkUtils.getResponseFromHttpUrl(NetworkUtils.buildURL());
                 List<NewsItem> newsList = JsonUtils.parseNews(searchResults);
+                System.out.println("INSIDE THE SYNCDATABASE TASK: - Just finished parsing new data from the internet.");
                 newsDao.insert(newsList);
+                System.out.println("INSIDE THE SYNCDATABASE TASK: - Just finished inserting new data into the database.");
 
             } catch (IOException e) {
                 System.out.println("ERROR ON LINE 48 - NewsItemRepository: ");

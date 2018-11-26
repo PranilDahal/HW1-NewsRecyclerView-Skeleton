@@ -1,6 +1,7 @@
 package com.example.rkjc.news_app_2;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -46,54 +48,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         newsRecyclerView = (RecyclerView) findViewById(R.id.news_recyclerview);
-        newsAdapter = new NewsAdapter(this, newsList);
+
+        newsItemViewModel = ViewModelProviders.of(this).get(NewsItemViewModel.class);
+
+        newsAdapter = new NewsAdapter(this, newsItemViewModel);
         newsRecyclerView.setAdapter(newsAdapter);
         newsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        newsItemViewModel = ViewModelProviders.of(this).get(NewsItemViewModel.class);
-//        new NewsQueryTask().execute();
-    }
-
-    public void populateRecyclerView(String searchResults) {
-        Log.d("mycode", searchResults);
-        newsList = JsonUtils.parseNews(searchResults);
-        newsAdapter.allNews = newsList;
-        runOnUiThread(new Runnable() {
+        newsItemViewModel.returnLiveDataList().observe(this, new Observer<List<NewsItem>>() {
             @Override
-            public void run() {
-                newsAdapter.notifyDataSetChanged();
+            public void onChanged(@Nullable List<NewsItem> newsItems) {
+                newsAdapter.setNewsList(newsItems);
             }
         });
     }
 
-    class NewsQueryTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            try {
-                searchResults = NetworkUtils.getResponseFromHttpUrl(NetworkUtils.buildURL());
-                populateRecyclerView(searchResults);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
 
         if (itemThatWasClickedId == R.id.action_search) {
-            new NewsQueryTask().execute();
+            newsItemViewModel.syncDatabaseWithNewInfo();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -104,5 +80,39 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
+
+//    public void populateRecyclerView(String searchResults) {
+//        Log.d("mycode", searchResults);
+//        newsList = JsonUtils.parseNews(searchResults);
+//        newsAdapter.allNews = newsList;
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                newsAdapter.notifyDataSetChanged();
+//            }
+//        });
+//    }
+
+//    class NewsQueryTask extends AsyncTask<Void, Void, Void> {
+//
+//        @Override
+//        protected Void doInBackground(Void... voids) {
+//
+//            try {
+//                searchResults = NetworkUtils.getResponseFromHttpUrl(NetworkUtils.buildURL());
+//                populateRecyclerView(searchResults);
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Void aVoid) {
+//            super.onPostExecute(aVoid);
+//        }
+//    }
 
 }

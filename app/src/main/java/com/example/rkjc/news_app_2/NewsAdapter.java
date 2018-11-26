@@ -14,18 +14,25 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsItemViewHolder> {
 
     Context context;
-    ArrayList<NewsItem> allNews;
+    private NewsItemViewModel newsItemViewModel;
+    private final LayoutInflater inflater;
+    private List<NewsItem> allNews;
 
-    public NewsAdapter(Context context, ArrayList<NewsItem> news) {
-        this.context = context;
-        this.allNews = news;
+    public NewsAdapter(Context context, NewsItemViewModel newsItemViewModel) {
+        this.newsItemViewModel = newsItemViewModel;
+        inflater = LayoutInflater.from(context);
     }
 
+    void setNewsList(List<NewsItem> newsList){
+        allNews = newsList;
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
