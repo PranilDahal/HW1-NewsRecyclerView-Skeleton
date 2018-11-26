@@ -11,11 +11,12 @@ public class NewsItemViewModel extends AndroidViewModel{
 
     private NewsItemRepository newsItemRepository;
 
-    private LiveData<List<NewsItem>> newsLiveDataList=null;
+    private LiveData<List<NewsItem>> newsLiveDataList;
 
     public NewsItemViewModel(@NonNull Application application) {
         super(application);
         newsItemRepository = new NewsItemRepository(application);
+        System.out.println("INSIDE NewsItemViewModel: - Now calling method inside the repository to get data.");
         newsLiveDataList = newsItemRepository.getAllNewsItem();
     }
 

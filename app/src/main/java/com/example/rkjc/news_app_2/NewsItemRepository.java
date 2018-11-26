@@ -19,6 +19,7 @@ public class NewsItemRepository {
     public NewsItemRepository(Application application) {
         NewsItemRoomDatabase db = NewsItemRoomDatabase.getDatabase(application.getApplicationContext());
         newsDao = db.newsDao();
+        System.out.println("INSIDE NewsItemRepository: - Calling the QUERY method inside the DAO.");
         allNews = newsDao.loadAllNewsitem();
     }
 
