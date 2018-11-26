@@ -9,7 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -26,6 +29,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsItemViewHo
 
     public NewsAdapter(Context context, NewsItemViewModel newsItemViewModel) {
         this.newsItemViewModel = newsItemViewModel;
+        this.context = context;
         inflater = LayoutInflater.from(context);
     }
 
@@ -61,18 +65,26 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsItemViewHo
         TextView title;
         TextView description;
         TextView date;
+        ImageView image;
 
         public NewsItemViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
             description = (TextView) itemView.findViewById(R.id.description);
             date = (TextView) itemView.findViewById(R.id.date);
+            image = (ImageView) itemView.findViewById(R.id.news_poster);
         }
 
         public void bind(final int position) {
             title.setText("Title:" + allNews.get(position).getTitle());
             description.setText("Description:" + allNews.get(position).getDescription());
             date.setText("Date:" + allNews.get(position).getPublishedAt());
+
+            if(allNews.get(position).getUrlToImage() != null){
+                Picasso.get()
+                        .load(allNews.get(position).getUrlToImage())
+                        .into(image);
+            }
 
             itemView.setOnClickListener(new View.OnClickListener(){
 

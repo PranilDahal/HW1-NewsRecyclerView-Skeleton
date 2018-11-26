@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.provider.UserDictionary;
 
@@ -16,8 +17,8 @@ public class NewsItemRepository {
 
     private LiveData<List<NewsItem>> allNews;
 
-    public NewsItemRepository(Application application) {
-        NewsItemRoomDatabase db = NewsItemRoomDatabase.getDatabase(application.getApplicationContext());
+    public NewsItemRepository(Context context) {
+        NewsItemRoomDatabase db = NewsItemRoomDatabase.getDatabase(context);
         newsDao = db.newsDao();
         System.out.println("INSIDE NewsItemRepository: - Calling the QUERY method inside the DAO.");
         allNews = newsDao.loadAllNewsitem();

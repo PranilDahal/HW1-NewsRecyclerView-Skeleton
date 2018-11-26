@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private NewsAdapter newsAdapter;
     private ArrayList<NewsItem> newsList = new ArrayList<NewsItem>();
 
+    private IntentFilter mFilter;
     private NewsItemViewModel newsItemViewModel;
 
     @Override
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         newsAdapter = new NewsAdapter(this, newsItemViewModel);
         newsRecyclerView.setAdapter(newsAdapter);
         newsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        NewsJobDispatcher.syncDatabaseWithDataFromAPI(this);
 
         newsItemViewModel.returnLiveDataList().observe(this, new Observer<List<NewsItem>>() {
             @Override
@@ -80,39 +84,5 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
-
-//    public void populateRecyclerView(String searchResults) {
-//        Log.d("mycode", searchResults);
-//        newsList = JsonUtils.parseNews(searchResults);
-//        newsAdapter.allNews = newsList;
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                newsAdapter.notifyDataSetChanged();
-//            }
-//        });
-//    }
-
-//    class NewsQueryTask extends AsyncTask<Void, Void, Void> {
-//
-//        @Override
-//        protected Void doInBackground(Void... voids) {
-//
-//            try {
-//                searchResults = NetworkUtils.getResponseFromHttpUrl(NetworkUtils.buildURL());
-//                populateRecyclerView(searchResults);
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void aVoid) {
-//            super.onPostExecute(aVoid);
-//        }
-//    }
 
 }

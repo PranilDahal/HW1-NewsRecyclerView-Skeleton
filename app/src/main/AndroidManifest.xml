@@ -18,12 +18,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
         <activity android:name=".WebActivity">
             <intent-filter>
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+
+        <service
+            android:exported="false"
+            android:name=".SyncJobService">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".CancelIntentService"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
