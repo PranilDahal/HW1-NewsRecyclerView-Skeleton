@@ -1,6 +1,7 @@
 package com.example.rkjc.news_app_2;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private NewsAdapter newsAdapter;
     private ArrayList<NewsItem> newsList = new ArrayList<NewsItem>();
 
+    private NewsItemViewModel newsItemViewModel;
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -46,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         newsAdapter = new NewsAdapter(this, newsList);
         newsRecyclerView.setAdapter(newsAdapter);
         newsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        newsItemViewModel = ViewModelProviders.of(this).get(NewsItemViewModel.class);
 //        new NewsQueryTask().execute();
     }
 

@@ -1,18 +1,47 @@
 package com.example.rkjc.news_app_2;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
+@Entity(tableName = "news_item")
 public class NewsItem {
-    public String author;
 
-    public String title;
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    private int id;
 
-    public String description;
+    @ColumnInfo(name = "author")
+    private String author;
 
-    public String url;
+    @ColumnInfo(name = "title")
+    private String title;
 
-    public String urlToImage;
+    @ColumnInfo(name = "description")
+    private String description;
 
-    public String publishedAt;
+    @ColumnInfo(name = "url")
+    private String url;
 
+    @ColumnInfo(name = "urlToImage")
+    private String urlToImage;
+
+    @ColumnInfo(name = "publishedAt")
+    private String publishedAt;
+
+    public NewsItem(@NonNull int id, String author, String title, String description, String url, String urlToImage, String publishedAt) {
+        this.id = id;
+        this.author = author;
+        this.title = title;
+        this.description = description;
+        this.url = url;
+        this.urlToImage = urlToImage;
+        this.publishedAt = publishedAt;
+    }
+
+    @Ignore
     public NewsItem(String author, String title, String description, String url, String urlToImage, String publishedAt) {
         this.author = author;
         this.title = title;
@@ -68,5 +97,13 @@ public class NewsItem {
 
     public void setPublishedAt(String publishedAt) {
         this.publishedAt = publishedAt;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
