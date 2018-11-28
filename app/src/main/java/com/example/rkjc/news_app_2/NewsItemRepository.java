@@ -38,13 +38,13 @@ public class NewsItemRepository {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            newsDao.clearAll();
 
             try {
 
                 String searchResults = NetworkUtils.getResponseFromHttpUrl(NetworkUtils.buildURL());
                 List<NewsItem> newsList = JsonUtils.parseNews(searchResults);
                 System.out.println("INSIDE THE SYNCDATABASE TASK: - Just finished parsing new data from the internet.");
+                newsDao.clearAll();
                 newsDao.insert(newsList);
                 System.out.println("INSIDE THE SYNCDATABASE TASK: - Just finished inserting new data into the database.");
 

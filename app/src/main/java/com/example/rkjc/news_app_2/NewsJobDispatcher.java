@@ -34,7 +34,7 @@ public class NewsJobDispatcher {
                 .setService(SyncJobService.class).setTag(SYNC_JOB_TAG).setConstraints(Constraint.ON_ANY_NETWORK)
                 .setLifetime(Lifetime.FOREVER).setRecurring(true)
                 .setTrigger(Trigger.executionWindow(
-                        0,SYNC_FLEXTIME_SECONDS))
+                        REMINDER_INTERVAL_SECONDS,SYNC_FLEXTIME_SECONDS))
                 .setReplaceCurrent(true)
                 .build();
 
