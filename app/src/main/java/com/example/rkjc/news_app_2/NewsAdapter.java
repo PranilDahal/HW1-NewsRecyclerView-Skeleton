@@ -33,7 +33,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsItemViewHo
         inflater = LayoutInflater.from(context);
     }
 
-    void setNewsList(List<NewsItem> newsList){
+    void setNewsList(List<NewsItem> newsList) {
         allNews = newsList;
         notifyDataSetChanged();
     }
@@ -57,7 +57,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsItemViewHo
 
     @Override
     public int getItemCount() {
-        return allNews.size();
+        if (allNews != null) {
+            return allNews.size();
+        } else {
+            return 0;
+        }
     }
 
     public class NewsItemViewHolder extends RecyclerView.ViewHolder {
@@ -80,16 +84,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsItemViewHo
             description.setText("Description:" + allNews.get(position).getDescription());
             date.setText("Date:" + allNews.get(position).getPublishedAt());
 
-            if(allNews.get(position).getUrlToImage() != null){
+            if (allNews.get(position).getUrlToImage() != null) {
                 Picasso.get()
                         .load(allNews.get(position).getUrlToImage())
                         .into(image);
             }
 
-            itemView.setOnClickListener(new View.OnClickListener(){
+            itemView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
-                public void onClick(View view){
+                public void onClick(View view) {
                     String urlString = allNews.get(position).getUrl();
                     Uri webpage = Uri.parse(urlString);
                     Intent intent = new Intent(Intent.ACTION_VIEW, webpage, context, WebActivity.class);
